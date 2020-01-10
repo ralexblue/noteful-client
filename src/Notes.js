@@ -24,7 +24,7 @@ export default class Notes extends React.Component {
             {notes}
             <br />
             <button>Add Note</button>
-            <AddNote />
+            <AddNote {...this.props}/>
         </div>
 
       );

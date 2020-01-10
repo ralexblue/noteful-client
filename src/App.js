@@ -15,11 +15,15 @@ export default class App extends React.Component {
       folders :[],
       notes:[],
       foldername:"",
-      noteName: ""
+      note: {
+        name: "",
+        content: "",
+        folderId:""
+        }
     }
   }
 
-  componentDidMount(){
+  getfolder=()=>{
     fetch(`http://localhost:9090/folders`, {
     method: 'GET',
     headers: {
@@ -31,20 +35,27 @@ export default class App extends React.Component {
     this.setState({
       folders:data,
     })
-    
     })
+  }
+  getnotes=()=>{
     fetch(`http://localhost:9090/notes`, {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json'
-    },
-    })
-    .then(res=>res.json())
-    .then(data=>{
-    this.setState({
-      notes:data,
-    })
-    })
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      },
+      })
+      .then(res=>res.json())
+      .then(data=>{
+      this.setState({
+        notes:data,
+      })
+      })
+  }
+
+
+  componentDidMount(){
+    this.getfolder();
+    this.getnotes();
   }
 
 
@@ -86,7 +97,7 @@ handleChangeFolderName=(name)=>{
 handleSubmitFolderName=(e)=>{
     const thename=JSON.stringify(this.state.foldername);
     e.preventDefault();
-    console.log(thename)
+    //console.log(thename)
     fetch(`http://localhost:9090/folders`, {
     method: 'POST',
     headers: {
@@ -94,9 +105,63 @@ handleSubmitFolderName=(e)=>{
     },
     body:thename
     })
+    .then(res =>res.json())
+    .then(data=>{
+      this.setState({
+        ...this.state.folders.push(data),
+      })
+    })
     .catch((error) => {
         console.log(error.message);
   });
+  
+}
+handleChangeNoteName = (e) => {
+  this.setState({
+      note: {
+      ...this.state.note,
+      name: e
+      }
+  })
+}
+handleChangeNoteDesc = (e) => {
+  this.setState({
+      note: {
+      ...this.state.note,
+      content: e
+      }
+  })
+}
+
+handleSubmitNote = (e,id,date) => {
+  e.preventDefault();
+  const newNoteAdd={
+    ...this.state.note,
+    folderId:id,
+    modified:date
+  }
+  
+  const theNote = JSON.stringify(newNoteAdd);
+  console.log(theNote);
+
+  e.preventDefault();
+  fetch('http://localhost:9090/notes', {
+      method: 'POST',
+      headers: {
+          'content-type': 'application/json'
+      },
+      body:theNote
+  })
+  .then(res =>res.json())
+  .then(data=>{
+    this.setState({
+      ...this.state.notes.push(data),
+    })
+  })
+  .catch((error) => {
+      console.log(error.message);
+});
+
 }
   render(){
     return (
@@ -111,6 +176,9 @@ handleSubmitFolderName=(e)=>{
                 deletehandlenote:this.deletehandlenote,
                 handleChangeFolderName:this.handleChangeFolderName,
                 handleSubmitFolderName:this.handleSubmitFolderName,
+                handleChangeNoteName:this.handleChangeNoteName,
+                handleChangeNoteDesc:this.handleChangeNoteDesc,
+                handleSubmitNote:this.handleSubmitNote
             }}>
           <Sidebar />
           <Switch>
@@ -120,7 +188,7 @@ handleSubmitFolderName=(e)=>{
             />
             <Route 
             path='/note/:noteid'
-            render={(props,history) => <Note {...props}  />}
+            render={(props) => <Note {...props}  />}
             />
           </Switch>
         </FoldersContext.Provider>
