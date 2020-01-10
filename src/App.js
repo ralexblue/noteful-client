@@ -12,9 +12,9 @@ export default class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      folders :[],
-      notes:[],
-      foldername:"",
+      folders: [],
+      notes: [],
+      foldername: "",
       note: {
         name: "",
         content: "",
@@ -200,7 +200,7 @@ handleSubmitNote = (e, id, date) => {
         <main>
           <Route path='/' component={Home} /> 
         </main>
-        <AppError message={this.state.error}>
+        <AppError>
           <div className="holder">
               <FoldersContext.Provider value={{
                       folders: this.state.folders,

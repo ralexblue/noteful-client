@@ -14,7 +14,7 @@ export default class AddNoteError extends React.Component {
     render(){ 
         if(this.state.hasError){   
             return (
-                <h2>Could not retrieve Noteful. {this.props.message}.</h2>
+                <h2>Could not retrieve Noteful. An error has occurred.</h2>
             )
         }
         return this.props.children;

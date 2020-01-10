@@ -47,7 +47,7 @@ export default class Sidebar extends React.Component {
     return (
       <div>
         {folders}
-        <button  onClick={(e) => this.handleClick(e)} handletype="button">Add folder</button>
+        <button onClick={(e) => this.handleClick(e)} handletype="button">Add folder</button>
         {this.renderAddFolder()}
       </div>
     );
