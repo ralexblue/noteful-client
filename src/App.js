@@ -4,14 +4,14 @@ import Sidebar from './Sidebar';
 import Notes from './Notes';
 import Note from './note';
 import './App.css';
-//import dummy from './dummy-store';
 import {Route, Switch} from 'react-router-dom';
 import FoldersContext from './context/FoldersContext';
+import AppError from './AppError'
 
 export default class App extends React.Component {
   constructor(props){
     super(props)
-    this.state={
+    this.state = {
       folders :[],
       notes:[],
       foldername:"",
@@ -19,47 +19,72 @@ export default class App extends React.Component {
         name: "",
         content: "",
         folderId:""
-        }
+        },
+      error: null
     }
   }
 
-  getfolder=()=>{
+  getfolder=() => {
     fetch(`http://localhost:9090/folders`, {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json'
-    },
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json'
+        },
     })
-    .then(res=>res.json())
-    .then(data=>{
-    this.setState({
-      folders:data,
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(error => { 
+          throw error
+        })
+      }
+      return res.json()
     })
+    .then(data => {
+        this.setState({
+          folders:data,
+        })
+    })
+    .catch(error => {
+        this.setState({
+          error: error.message
+        })
     })
   }
-  getnotes=()=>{
+
+  getnotes=() => {
     fetch(`http://localhost:9090/notes`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json'
       },
       })
-      .then(res=>res.json())
-      .then(data=>{
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(error => { 
+            throw error
+          })
+        }
+        return res.json()
+      })
+    .then(data=>{
       this.setState({
         notes:data,
       })
+    })
+    .catch(error => {
+      this.setState({
+        error: error.message
       })
-  }
+  })
+}
 
-
-  componentDidMount(){
+  componentDidMount() {
     this.getfolder();
     this.getnotes();
   }
 
 
-  deletehandlenote =(id) =>{
+  deletehandlenote = (id) =>{
     const newNotes = this.state.notes.filter(notes =>
     notes.id !== id
     )
@@ -81,12 +106,13 @@ export default class App extends React.Component {
       return res.json()
     })
     .catch(error => {
-      console.error(error)
-    })
-  }
+      this.setState({
+        error: error.message
+      })
+  })
+}
 
 handleChangeFolderName=(name)=>{
-  console.log(name);
   this.setState({
       foldername:{
           name
@@ -96,8 +122,9 @@ handleChangeFolderName=(name)=>{
 
 handleSubmitFolderName=(e)=>{
     const thename=JSON.stringify(this.state.foldername);
+    
     e.preventDefault();
-    //console.log(thename)
+    
     fetch(`http://localhost:9090/folders`, {
     method: 'POST',
     headers: {
@@ -111,11 +138,13 @@ handleSubmitFolderName=(e)=>{
         ...this.state.folders.push(data),
       })
     })
-    .catch((error) => {
-        console.log(error.message);
-  });
-  
+    .catch(error => {
+      this.setState({
+        error: error.message
+      })
+  })
 }
+
 handleChangeNoteName = (e) => {
   this.setState({
       note: {
@@ -124,6 +153,7 @@ handleChangeNoteName = (e) => {
       }
   })
 }
+
 handleChangeNoteDesc = (e) => {
   this.setState({
       note: {
@@ -133,66 +163,70 @@ handleChangeNoteDesc = (e) => {
   })
 }
 
-handleSubmitNote = (e,id,date) => {
-  e.preventDefault();
-  const newNoteAdd={
-    ...this.state.note,
-    folderId:id,
-    modified:date
-  }
-  
-  const theNote = JSON.stringify(newNoteAdd);
-  console.log(theNote);
+handleSubmitNote = (e, id, date) => {
+    e.preventDefault();
+    const newNoteAdd={
+      ...this.state.note,
+      folderId:id,
+      modified:date
+    }
+    
+    const theNote = JSON.stringify(newNoteAdd);
 
-  e.preventDefault();
-  fetch('http://localhost:9090/notes', {
-      method: 'POST',
-      headers: {
-          'content-type': 'application/json'
-      },
-      body:theNote
-  })
-  .then(res =>res.json())
-  .then(data=>{
-    this.setState({
-      ...this.state.notes.push(data),
+    e.preventDefault();
+    fetch('http://localhost:9090/notes', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body:theNote
     })
+    .then(res =>res.json())
+    .then(data=>{
+      this.setState({
+        ...this.state.notes.push(data),
+      })
+    })
+    .catch(error => {
+      this.setState({
+        error: error.message
+      })
   })
-  .catch((error) => {
-      console.log(error.message);
-});
-
 }
+
   render(){
     return (
       <>
         <main>
           <Route path='/' component={Home} /> 
         </main>
-        <div className="holder">
-        <FoldersContext.Provider value={{
-                folders: this.state.folders,
-                notes: this.state.notes,
-                deletehandlenote:this.deletehandlenote,
-                handleChangeFolderName:this.handleChangeFolderName,
-                handleSubmitFolderName:this.handleSubmitFolderName,
-                handleChangeNoteName:this.handleChangeNoteName,
-                handleChangeNoteDesc:this.handleChangeNoteDesc,
-                handleSubmitNote:this.handleSubmitNote
-            }}>
-          <Sidebar />
-          <Switch>
-            <Route 
-            path='/folder/:folderid'
-            render={props => <Notes {...props} />}
-            />
-            <Route 
-            path='/note/:noteid'
-            render={(props) => <Note {...props}  />}
-            />
-          </Switch>
-        </FoldersContext.Provider>
-        </div>
+        <AppError message={this.state.error}>
+          <div className="holder">
+              <FoldersContext.Provider value={{
+                      folders: this.state.folders,
+                      notes: this.state.notes,
+                      note: this.state.note,
+                      deletehandlenote:this.deletehandlenote,
+                      handleChangeFolderName:this.handleChangeFolderName,
+                      handleSubmitFolderName:this.handleSubmitFolderName,
+                      handleChangeNoteName:this.handleChangeNoteName,
+                      handleChangeNoteDesc:this.handleChangeNoteDesc,
+                      handleSubmitNote:this.handleSubmitNote
+                  }}>
+                <Sidebar />
+                <Switch>
+                  <Route 
+                  path='/folder/:folderid'
+                  render={props => <Notes {...props} />}
+                  />
+                  <Route 
+                  path='/note/:noteid'
+                  render={(props) => <Note {...props}  />}
+                  />
+                </Switch>
+              </FoldersContext.Provider>
+          </div>
+        </AppError>
       </>
     );
   }
