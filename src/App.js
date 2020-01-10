@@ -15,6 +15,7 @@ export default class App extends React.Component {
       folders :[],
       notes:[],
       foldername:"",
+      noteName: ""
     }
   }
 
@@ -72,6 +73,7 @@ export default class App extends React.Component {
       console.error(error)
     })
   }
+
 handleChangeFolderName=(name)=>{
   console.log(name);
   this.setState({
@@ -80,6 +82,7 @@ handleChangeFolderName=(name)=>{
       }
   })
 }
+
 handleSubmitFolderName=(e)=>{
     const thename=JSON.stringify(this.state.foldername);
     e.preventDefault();
