@@ -1,12 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import AddFolder from './AddFolder';
+import AddFolderError from './AddFolderError';
 import FoldersContext from './context/FoldersContext';
 
 export default class Sidebar extends React.Component {
 
-  changeId(value){
-    this.props.changefolderid(value)
-  }
   static contextType = FoldersContext;
 
   render(){
@@ -17,7 +16,12 @@ export default class Sidebar extends React.Component {
     );
     return (
       <div>
+        
         {folders}
+        <button  type="button">Add folder</button>
+        <AddFolderError>
+        <AddFolder/>
+        </AddFolderError>
       </div>
     );
   }

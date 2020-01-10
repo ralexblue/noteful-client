@@ -24,4 +24,4 @@ export default class Notes extends React.Component {
         </div>
       );
     }
-  }
+}

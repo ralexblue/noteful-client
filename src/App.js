@@ -14,6 +14,7 @@ export default class App extends React.Component {
     this.state={
       folders :[],
       notes:[],
+      foldername:"",
     }
   }
 
@@ -70,10 +71,30 @@ export default class App extends React.Component {
     .catch(error => {
       console.error(error)
     })
-    
   }
-
-
+handleChangeFolderName=(name)=>{
+  console.log(name);
+  this.setState({
+      foldername:{
+          name
+      }
+  })
+}
+handleSubmitFolderName=(e)=>{
+    const thename=JSON.stringify(this.state.foldername);
+    e.preventDefault();
+    console.log(thename)
+    fetch(`http://localhost:9090/folders`, {
+    method: 'POST',
+    headers: {
+    'content-type': 'application/json'
+    },
+    body:thename
+    })
+    .catch((error) => {
+        console.log(error.message);
+  });
+}
   render(){
     return (
       <>
@@ -85,7 +106,8 @@ export default class App extends React.Component {
                 folders: this.state.folders,
                 notes: this.state.notes,
                 deletehandlenote:this.deletehandlenote,
-
+                handleChangeFolderName:this.handleChangeFolderName,
+                handleSubmitFolderName:this.handleSubmitFolderName,
             }}>
           <Sidebar />
           <Switch>
@@ -97,7 +119,6 @@ export default class App extends React.Component {
             path='/note/:noteid'
             render={(props,history) => <Note {...props}  />}
             />
-            
           </Switch>
         </FoldersContext.Provider>
         </div>
