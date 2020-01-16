@@ -2,6 +2,7 @@ import React from 'react';
 import FoldersContext from './context/FoldersContext';
 import ValidationError from './ValidationError'
 
+
 export default class AddNote extends React.Component { 
     static contextType = FoldersContext;
 
@@ -42,5 +43,14 @@ export default class AddNote extends React.Component {
         </>
       )
     }
-  }
+}
+/*AddNote.ContextTypes={
+    note:{
+        name:PropTypes.string,
+        content:PropTypes.string,
+    }
+}*/
+ 
+
+
 

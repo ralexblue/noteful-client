@@ -5,13 +5,13 @@ export default class AddFolder extends React.Component {
     static contextType = FoldersContext;
     render(){    
       return (
-        <>
         <form onSubmit={(e)=>this.context.handleSubmitFolderName(e)}>
         <input type="text" 
-           name="name" onChange={e => this.context.handleChangeFolderName(e.currentTarget.value)}/>
+           name="name" onChange={e => this.context.handleChangeFolderName(e.target.value)}/>
         <button type="submit">submit</button>
         </form>
-        </>
       )
     }
   }
+
+ 

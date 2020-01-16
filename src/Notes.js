@@ -8,7 +8,6 @@ import AddNoteError from './AddNoteError'
 export default class Notes extends React.Component {
 
   static contextType = FoldersContext;
-
   state= {
     formOpen: false
   }

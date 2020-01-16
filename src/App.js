@@ -7,6 +7,18 @@ import './App.css';
 import {Route, Switch} from 'react-router-dom';
 import FoldersContext from './context/FoldersContext';
 import AppError from './AppError'
+import PropTypes from 'prop-types';
+
+
+FoldersContext.Provider.propTypes={
+  notes:PropTypes.array,
+  folders:PropTypes.array,
+  foldername:PropTypes.string.isRequired,
+  note:{
+    name:PropTypes.string.isRequired,
+    content:PropTypes.string.isRequired,
+  }
+}
 
 export default class App extends React.Component {
   constructor(props){
@@ -231,3 +243,11 @@ handleSubmitNote = (e, id, date) => {
     );
   }
 }
+
+/*App.PropTypes={
+  note:{
+      name:PropTypes.string,
+      content:PropTypes.string,
+  },
+  folderId:PropTypes.string,
+}*/

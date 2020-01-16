@@ -8,36 +8,6 @@ export default class Sidebar extends React.Component {
 
   static contextType = FoldersContext;
 
-  state = {
-    formOpen: false
-  }
-
-  handleClick = (e) => {
-    e.preventDefault();
-    this.setState({
-      formOpen: true
-    })
-  }
-
-  handleClickClose = (e) => {
-    e.preventDefault()
-    this.setState({
-      formOpen: false
-    })
-  }
-
-  renderAddFolder = () => {
-    if (this.state.formOpen) {
-      return (
-        <AddFolderError>
-          <AddFolder/>
-          <button onClick={(e) => this.handleClickClose(e)}>Close</button>
-        </AddFolderError>
-      )
-    } 
-    return <></>
-  }
-
   render(){
     const folders = this.context.folders.map((folder)=>
       <Link className="folder box" id={folder.id} to={`/folder/${folder.id}`}>
@@ -46,9 +16,12 @@ export default class Sidebar extends React.Component {
     );
     return (
       <div>
+        
         {folders}
-        <button onClick={(e) => this.handleClick(e)} handletype="button">Add folder</button>
-        {this.renderAddFolder()}
+        <button  type="button">Add folder</button>
+        <AddFolderError>
+        <AddFolder/>
+        </AddFolderError>
       </div>
     );
   }
