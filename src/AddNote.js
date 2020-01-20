@@ -27,29 +27,34 @@ export default class AddNote extends React.Component {
         }
     }
     
-    render(){    
+
+    render(){   
+        const folders = this.context.folders.map((folder)=>
+      <option className="folder box" id={folder.id} value={folder.id}>
+        {folder.name}
+      </option>
+    ); 
       return (
          <> 
-        <form onSubmit={(e)=>this.context.handleSubmitNote(e,this.props.match.params.folderid,new Date().toLocaleString())}>
+        <form onSubmit={(e)=>this.context.handleSubmitNote(e,new Date().toLocaleString())}>
             <label htmlFor="NoteName">Note Name: </label>
             <input type="text" 
-            name="name" onChange={e => this.context.handleChangeNoteName(e.currentTarget.value)}/>
+            name="name" onChange={e => this.context.handleChangeNoteName(e.currentTarget.value)} required/>
             {<ValidationError message={this.validateName()}/>}   
             <br />
             <label htmlFor="NoteDesc">Note Description: </label>
             <input type="textarea" name="description" onChange={e => this.context.handleChangeNoteDesc(e.currentTarget.value)}/>
+            <label>Folder:</label>
+            <select name="folders"onChange={e => this.context.handleChangeNotefolder(e.currentTarget.value)} required>
+            {folders}
+            </select>
             <button type="submit">submit</button>
         </form>
         </>
       )
     }
 }
-/*AddNote.ContextTypes={
-    note:{
-        name:PropTypes.string,
-        content:PropTypes.string,
-    }
-}*/
+
  
 
 

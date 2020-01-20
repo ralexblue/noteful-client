@@ -174,12 +174,19 @@ handleChangeNoteDesc = (e) => {
       }
   })
 }
+handleChangeNotefolder= (e) => {
+  this.setState({
+      note: {
+      ...this.state.note,
+      folderId: e
+      }
+  })
+}
 
-handleSubmitNote = (e, id, date) => {
+handleSubmitNote = (e, date) => {
     e.preventDefault();
     const newNoteAdd={
       ...this.state.note,
-      folderId:id,
       modified:date
     }
     
@@ -223,7 +230,8 @@ handleSubmitNote = (e, id, date) => {
                       handleSubmitFolderName:this.handleSubmitFolderName,
                       handleChangeNoteName:this.handleChangeNoteName,
                       handleChangeNoteDesc:this.handleChangeNoteDesc,
-                      handleSubmitNote:this.handleSubmitNote
+                      handleSubmitNote:this.handleSubmitNote,
+                      handleChangeNotefolder:this.handleChangeNotefolder
                   }}>
                 <Sidebar />
                 <Switch>

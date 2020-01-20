@@ -18,7 +18,6 @@ export default class Sidebar extends React.Component {
       <div>
         
         {folders}
-        <button  type="button">Add folder</button>
         <AddFolderError>
         <AddFolder/>
         </AddFolderError>
