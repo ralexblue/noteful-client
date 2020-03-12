@@ -8,6 +8,7 @@ import {Route, Switch} from 'react-router-dom';
 import FoldersContext from './context/FoldersContext';
 import AppError from './AppError'
 import PropTypes from 'prop-types';
+import config from './config';
 
 
 FoldersContext.Provider.propTypes={
@@ -28,16 +29,16 @@ export default class App extends React.Component {
       notes: [],
       foldername: "",
       note: {
-        name: "",
+        author: "",
         content: "",
-        folderId:""
+        folder:""
         },
       error: null
     }
   }
 
   getfolder=() => {
-    fetch(`http://localhost:9090/folders`, {
+    fetch(`${config.API_ENDPOINT}/folders`, {
         method: 'GET',
         headers: {
           'content-type': 'application/json'
@@ -64,7 +65,7 @@ export default class App extends React.Component {
   }
 
   getnotes=() => {
-    fetch(`http://localhost:9090/notes`, {
+    fetch(`${config.API_ENDPOINT}/notes`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json'
@@ -103,7 +104,7 @@ export default class App extends React.Component {
     this.setState({
       notes: newNotes,
     })
-    return fetch(`http://localhost:9090/notes/${id}`, {
+    return fetch(`${config.API_ENDPOINT}/notes/${id}`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json'
@@ -127,7 +128,7 @@ export default class App extends React.Component {
 handleChangeFolderName=(name)=>{
   this.setState({
       foldername:{
-          name
+          title:name
       }
   })
 }
@@ -137,7 +138,7 @@ handleSubmitFolderName=(e)=>{
     
     e.preventDefault();
     
-    fetch(`http://localhost:9090/folders`, {
+    fetch(`${config.API_ENDPOINT}/folders`, {
     method: 'POST',
     headers: {
     'content-type': 'application/json'
@@ -161,7 +162,7 @@ handleChangeNoteName = (e) => {
   this.setState({
       note: {
       ...this.state.note,
-      name: e
+      author: e
       }
   })
 }
@@ -178,22 +179,21 @@ handleChangeNotefolder= (e) => {
   this.setState({
       note: {
       ...this.state.note,
-      folderId: e
+      folder: e
       }
   })
 }
 
-handleSubmitNote = (e, date) => {
+handleSubmitNote = (e) => {
     e.preventDefault();
     const newNoteAdd={
       ...this.state.note,
-      modified:date
     }
     
     const theNote = JSON.stringify(newNoteAdd);
-
+  console.log(theNote);
     e.preventDefault();
-    fetch('http://localhost:9090/notes', {
+    fetch(`${config.API_ENDPOINT}/notes`, {
         method: 'POST',
         headers: {
             'content-type': 'application/json'

@@ -40,7 +40,7 @@ export default class Notes extends React.Component {
   
     render(){
         const notes = this.context.notes
-        .filter(note=>note.folderId===this.props.match.params.folderid)
+        .filter(note=>note.folder===this.props.match.params.folder)
         .map((note)=>
         <>
         <Link className="folder box" id={note.id} to={`/note/${note.id}`}>

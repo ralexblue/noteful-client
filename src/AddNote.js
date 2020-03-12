@@ -10,17 +10,18 @@ export default class AddNote extends React.Component {
         super(props);
         this.state = {
             note: {
-                name: "",
+                author: "",
                 touched: false
-            }
+            },
+            folder:null,
         }
     }
 
     
     validateName() {
-        const name = this.context.note.name;
-        if (name === "") {
-            return "Name is required";
+        const author = this.context.note.author;
+        if (author === "") {
+            return "author is required";
         }
         else {
             return null;
@@ -31,7 +32,7 @@ export default class AddNote extends React.Component {
     render(){   
         const folders = this.context.folders.map((folder)=>
       <option className="folder box" id={folder.id} value={folder.id}>
-        {folder.name}
+        {folder.title}
       </option>
     ); 
       return (

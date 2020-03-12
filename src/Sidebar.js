@@ -11,7 +11,7 @@ export default class Sidebar extends React.Component {
   render(){
     const folders = this.context.folders.map((folder)=>
       <Link className="folder box" id={folder.id} to={`/folder/${folder.id}`}>
-        <h2>{folder.name}</h2>
+        <h2>{folder.title}</h2>
       </Link>
     );
     return (
